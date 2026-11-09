@@ -48,12 +48,25 @@ export const generateSecret = (
   return build([]).join('');
 };
 
-
 export interface GuessResult {
   bulls: number;
   cows: number;
 }
 
 export const evaluateGuess = (secret: string, guess: string): GuessResult => {
-  return { bulls: 0, cows: 0 }; 
+  const secretArr = secret.toLowerCase().split('');
+  const guessArr = guess.toLowerCase().split('');
+
+  return guessArr.reduce(
+    (acc, char, index) => {
+      if (secretArr[index] === char) {
+        return { ...acc, bulls: acc.bulls + 1 };
+      }
+      if (secretArr.includes(char)) {
+        return { ...acc, cows: acc.cows + 1 };
+      }
+      return acc;
+    },
+    { bulls: 0, cows: 0 }
+  );
 };
