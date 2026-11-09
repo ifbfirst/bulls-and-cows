@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createDigitValidator, isValidGuess,generateSecret } from '../core/game';
+import { createDigitValidator, isValidGuess,generateSecret, evaluateGuess } from '../core/game';
 
 describe('createDigitValidator', () => {
   it('должен правильно валидировать цифры для двоичной системы (base 2)', () => {
@@ -41,5 +41,19 @@ describe('generateSecret', () => {
     const secret = generateSecret(3, 10, mockRandom);
     expect(secret).toHaveLength(3);
     expect(new Set(secret).size).toBe(3);
+  });
+});
+
+describe('evaluateGuess', () => {
+  it('должен правильно подсчитывать быков и коров', () => {
+    expect(evaluateGuess('1234', '1324')).toEqual({ bulls: 2, cows: 2 });
+    
+    expect(evaluateGuess('abcd', 'bcda')).toEqual({ bulls: 0, cows: 4 });
+    
+    expect(evaluateGuess('1234', '5678')).toEqual({ bulls: 0, cows: 0 });
+  });
+
+  it('должен работать регистронезависимо', () => {
+    expect(evaluateGuess('aBcd', 'Abcd')).toEqual({ bulls: 4, cows: 0 });
   });
 });
